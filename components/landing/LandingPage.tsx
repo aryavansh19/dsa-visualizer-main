@@ -22,7 +22,7 @@ export default function LandingPage() {
             </nav>
 
             {/* Main Section */}
-            <main className="flex-1 flex flex-col items-center justify-center px-4 z-10 -mt-90">
+            <main className="relative flex flex-col items-center justify-center px-4 z-20" style={{ top: '6rem' }}>
 
                 <h1 className="text-center text-4xl md:text-6xl font-bold leading-tight mb-6">
                     Data Structure Visualizer <br />
@@ -62,12 +62,12 @@ export default function LandingPage() {
                                 </Link>
                                 <Link href="\visualizer\linked-list">
                                     <button className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-md transition duration-200">
-                                        Linked List (Coming Soon...) 
+                                        Linked List
                                     </button>
                                 </Link>
-                                <Link href="/routes/tree">
+                                <Link href="\visualizer\binary-tree">
                                     <button className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-md transition duration-200">
-                                        Tree (Coming Soon...)
+                                        Tree
                                     </button>
                                 </Link>
                                 <Link href="/routes/graph">

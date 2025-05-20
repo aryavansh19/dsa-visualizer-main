@@ -127,9 +127,9 @@ function PointerLabel({ name, position, color }: {
       exit={{ opacity: 0, y: 10 }}
       className="absolute pointer-events-none"
       style={{ 
-        //left: position.x,
-        //top: position.y,
-        //color: color
+        left: position.x,
+        top: position.y,
+        color: color
       }}
     >
       <div className="flex flex-col items-center">

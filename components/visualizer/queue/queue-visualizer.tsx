@@ -4,15 +4,66 @@ import { QueueControls } from "@/components/visualizer/queue/queue-controls"
 import { QueueDisplay } from "@/components/visualizer/queue/queue-display"
 import { QueueOperations } from "@/components/visualizer/queue/queue-operations"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-//import { MarkdownContent } from "@/components/shared/markdown-content"
 import { useQueue } from "@/hooks/use-queue"
+import { useState, useMemo } from "react"
+
+// Import QueueNode type from where it's defined
+import { QueueNode } from "@/components/visualizer/queue/types" // Assuming types.ts defines QueueNode
+
+// SIMPLIFIED Helper function to generate Queue C++ code with standalone functions
+// It now directly accepts QueueNode[] and the queue's max capacity.
+const generateQueueCppCode = (currentQueueNodes: QueueNode[], maxCapacity: number): string => {
+  const elements = currentQueueNodes.map(node => node.value) || [];
+  const capacity = maxCapacity;
+
+  const initializations = elements.length > 0
+    ? `    // Current queue elements: ${elements.join(', ')}\n` +
+      elements.map(val => `    enqueue(${val});`).join('\n') // Call standalone enqueue
+    : `    // Queue is currently empty`;
+
+  return `
+#include <iostream>
+#include <vector>
+
+
+void enqueue(int item) {
+    if (isFull()) {
+        return; // Queue is full, cannot add
+    }
+    queue_rear_idx = (queue_rear_idx + 1) % QUEUE_CAPACITY; // Move rear_idx circularly
+    queue_arr[queue_rear_idx] = item; // Insert item
+    queue_current_size++; // Increment size
+}
+
+int dequeue() {
+    if (isEmpty()) {
+        return -1; // Queue is empty, cannot remove; return -1 as indicator
+    }
+    int item = queue_arr[queue_front_idx]; // Get front item
+    queue_front_idx = (queue_front_idx + 1) % QUEUE_CAPACITY; // Move front_idx circularly
+    queue_current_size--; // Decrement size
+    return item;
+}
+
+int main() {
+
+${initializations}
+
+}
+  `.trim();
+};
+
 
 interface QueueVisualizerProps {
   content: React.ReactNode
 }
 
 export function QueueVisualizer({ content }: QueueVisualizerProps) {
-  const { 
+  const QUEUE_MAX_SIZE = 8; // Define your max size here or get it from props
+
+  const [activeTab, setActiveTab] = useState<string>('visualization');
+
+  const {
     queue,
     operations,
     isAnimating,
@@ -22,7 +73,10 @@ export function QueueVisualizer({ content }: QueueVisualizerProps) {
     clear,
     isFull,
     isEmpty,
-  } = useQueue()
+  } = useQueue(QUEUE_MAX_SIZE);
+
+  const queueCppCode = useMemo(() => generateQueueCppCode(queue, QUEUE_MAX_SIZE), [queue, QUEUE_MAX_SIZE]);
+
 
   return (
     <div className="container mx-auto">
@@ -33,16 +87,16 @@ export function QueueVisualizer({ content }: QueueVisualizerProps) {
         </p>
       </div>
 
-      <Tabs defaultValue="visualization" className="w-full space-y-6">
+      <Tabs defaultValue="visualization" className="w-full space-y-6" onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="visualization">Visualization</TabsTrigger>
-          <TabsTrigger value="explanation">Explanation</TabsTrigger>
+          <TabsTrigger value="code">Code</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="visualization" className="space-y-6">
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div className="xl:col-span-1 space-y-6">
-              <QueueControls 
+              <QueueControls
                 onEnqueue={enqueue}
                 onDequeue={dequeue}
                 onClear={clear}
@@ -53,18 +107,23 @@ export function QueueVisualizer({ content }: QueueVisualizerProps) {
               <QueueOperations operations={operations} />
             </div>
             <div className="xl:col-span-2">
-              <QueueDisplay 
+              <QueueDisplay
                 queue={queue}
                 highlightedIndex={highlightedIndex}
               />
             </div>
           </div>
         </TabsContent>
-        
-        <TabsContent value="explanation" className="prose prose-invert max-w-none">
-          
+
+        <TabsContent value="code" className="prose prose-invert max-w-none">
+          <h3 className="text-xl font-semibold mb-2">Queue C++ Code (Procedural Style)</h3>
+          <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto text-sm font-mono">
+            <code>
+              {queueCppCode}
+            </code>
+          </pre>
         </TabsContent>
       </Tabs>
     </div>
   )
-} 
+}
