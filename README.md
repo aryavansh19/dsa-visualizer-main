@@ -36,11 +36,6 @@ Users can input data, choose operations like insertion or deletion, and instantl
 * Dijkstra's Shortest Path Algorithm Visualization
 * Full Testing and Final App Validation
 
-
-### Project Folder Structure
-![Folder structure of the Data Structure Visualizer project](image_67344b.png)
-*(This image was provided in your uploads and shows the `commands`, `core`, `.venv` directories, etc., which is relevant for showing the project's organization. Ensure this image file is present in your repository root.)*
-
 ## 🏗️ Project Approach & Architecture
 
 The project is developed using **React.js** for building dynamic, component-based user interfaces and **Tailwind CSS** for responsive, utility-first styling.
