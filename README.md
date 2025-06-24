@@ -36,13 +36,6 @@ Users can input data, choose operations like insertion or deletion, and instantl
 * Dijkstra's Shortest Path Algorithm Visualization
 * Full Testing and Final App Validation
 
-## 📸 Screenshots
-
-*(Replace these placeholders with actual screenshots or a GIF of your visualizer in action for maximum impact!)*
-
-### Data Structure Visualization in Action
-![Screenshot of Data Structure Visualizer UI](assets/visualizer_screenshot.png)
-*(Example: A screenshot showing a linked list insertion animation. Please place your image file in an `assets` folder relative to your README.)*
 
 ### Project Folder Structure
 ![Folder structure of the Data Structure Visualizer project](image_67344b.png)
